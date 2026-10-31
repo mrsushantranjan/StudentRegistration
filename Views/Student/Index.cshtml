@@ -1,0 +1,190 @@
+@model IEnumerable<StudentRegistration.Models.Student>
+
+@{
+    ViewData["Title"] = "Students Directory";
+    var totalStudents = Model.Count();
+    var courseCount = Model.Select(s => s.Course).Distinct().Count();
+}
+
+<div class="row g-3 mb-4">
+    <!-- Stat 1: Total Students -->
+    <div class="col-md-4">
+        <div class="stat-widget">
+            <div class="stat-icon stat-icon-indigo">
+                <i class="bi bi-people-fill"></i>
+            </div>
+            <div>
+                <div class="text-muted small fw-medium">Total Registered</div>
+                <div class="fs-4 fw-bold text-dark">@totalStudents</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stat 2: Active Programs -->
+    <div class="col-md-4">
+        <div class="stat-widget">
+            <div class="stat-icon stat-icon-sky">
+                <i class="bi bi-book-half"></i>
+            </div>
+            <div>
+                <div class="text-muted small fw-medium">Active Programs</div>
+                <div class="fs-4 fw-bold text-dark">@(courseCount > 0 ? courseCount : 3) Specializations</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stat 3: Quick Action -->
+    <div class="col-md-4">
+        <div class="stat-widget justify-content-between">
+            <div class="d-flex align-items-center gap-3">
+                <div class="stat-icon stat-icon-emerald">
+                    <i class="bi bi-person-check-fill"></i>
+                </div>
+                <div>
+                    <div class="text-muted small fw-medium">Admissions</div>
+                    <div class="fs-6 fw-bold text-success">Open & Active</div>
+                </div>
+            </div>
+            <a asp-action="Create" class="btn btn-outline-primary btn-sm rounded-pill px-3">
+                <i class="bi bi-plus-lg"></i> Add
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Header & Search Toolbar -->
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-3">
+    <div>
+        <h4 class="fw-bold mb-1 text-dark">Student Directory</h4>
+        <p class="text-muted small mb-0">Manage registered students, academic records, and semester details.</p>
+    </div>
+
+    <div class="d-flex align-items-center gap-2">
+        <div class="search-input-wrap">
+            <i class="bi bi-search search-icon"></i>
+            <input type="text" id="studentSearchInput" class="form-control" placeholder="Search by name or email..." />
+        </div>
+        <a asp-action="Create" class="btn btn-primary d-inline-flex align-items-center gap-2 rounded-pill px-3 py-2 shadow-sm text-nowrap">
+            <i class="bi bi-plus-circle-fill"></i>
+            <span>Register Student</span>
+        </a>
+    </div>
+</div>
+
+<!-- Main Table Container -->
+<div class="modern-table-container">
+    @if (!Model.Any())
+    {
+        <div class="empty-state">
+            <div class="empty-state-icon">
+                <i class="bi bi-folder2-open"></i>
+            </div>
+            <h5 class="fw-bold text-dark">No students registered yet</h5>
+            <p class="text-muted small max-w-sm mx-auto mb-3">
+                Get started by adding your first student to the system.
+            </p>
+            <a asp-action="Create" class="btn btn-primary rounded-pill px-4 py-2">
+                <i class="bi bi-person-plus-fill me-1"></i> Register New Student
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table modern-table" id="studentsTable">
+                <thead>
+                    <tr>
+                        <th style="width: 70px;">ID</th>
+                        <th>Student</th>
+                        <th>Program / Course</th>
+                        <th>Semester</th>
+                        <th class="text-end" style="width: 140px;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int colorIdx = 0;
+                    }
+                    @foreach (var student in Model)
+                    {
+                        var initials = string.Join("", student.Name.Split(' ', StringSplitOptions.RemoveEmptyEntries).Take(2).Select(s => s[0]));
+                        var avatarClass = "avatar-color-" + (colorIdx++ % 4);
+
+                        var badgeClass = student.Course switch
+                        {
+                            "Computer Engineering" => "badge-ce",
+                            "Information Technology" => "badge-it",
+                            "Data Science" => "badge-ds",
+                            _ => "badge-default"
+                        };
+
+                        var courseIcon = student.Course switch
+                        {
+                            "Computer Engineering" => "bi-cpu",
+                            "Information Technology" => "bi-globe",
+                            "Data Science" => "bi-pie-chart",
+                            _ => "bi-mortarboard"
+                        };
+
+                        <tr class="student-row">
+                            <td class="text-muted fw-semibold">#@student.Id</td>
+                            <td>
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="avatar-badge @avatarClass">
+                                        @initials
+                                    </div>
+                                    <div>
+                                        <div class="fw-bold text-dark student-name">@student.Name</div>
+                                        <div class="text-muted small student-email">@student.Email</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge-course @badgeClass">
+                                    <i class="bi @courseIcon"></i>
+                                    <span>@student.Course</span>
+                                </span>
+                            </td>
+                            <td>
+                                <span class="semester-pill">
+                                    <i class="bi bi-calendar3 me-1 text-muted"></i>
+                                    Sem @student.Semester
+                                </span>
+                            </td>
+                            <td class="text-end">
+                                <a asp-action="Details" asp-route-id="@student.Id" class="btn-action-view" id="view-student-@student.Id">
+                                    <span>Details</span>
+                                    <i class="bi bi-arrow-right-short fs-6"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        // Live client-side search filter
+        const searchInput = document.getElementById('studentSearchInput');
+        if (searchInput) {
+            searchInput.addEventListener('input', function (e) {
+                const term = e.target.value.toLowerCase().trim();
+                const rows = document.querySelectorAll('.student-row');
+
+                rows.forEach(row => {
+                    const name = row.querySelector('.student-name')?.textContent.toLowerCase() || '';
+                    const email = row.querySelector('.student-email')?.textContent.toLowerCase() || '';
+
+                    if (name.includes(term) || email.includes(term)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+        }
+    </script>
+}
