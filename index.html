@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Students Directory - StudentHub</title>
+    
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap 5 & Bootstrap Icons CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    
+    <style>
+        :root {
+            --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --primary-light: #eef2ff;
+            --primary-glow: rgba(79, 70, 229, 0.15);
+            --slate-50: #f8fafc;
+            --slate-100: #f1f5f9;
+            --slate-200: #e2e8f0;
+            --slate-300: #cbd5e1;
+            --slate-400: #94a3b8;
+            --slate-500: #64748b;
+            --slate-600: #475569;
+            --slate-700: #334155;
+            --slate-800: #1e293b;
+            --slate-900: #0f172a;
+            --success: #10b981;
+            --success-light: #ecfdf5;
+            --info: #0284c7;
+            --info-light: #f0f9ff;
+            --warning: #f59e0b;
+            --warning-light: #fffbeb;
+            --shadow-subtle: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+            --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.04), 0 2px 4px -2px rgba(0, 0, 0, 0.03), 0 0 0 1px rgba(226, 232, 240, 0.6);
+            --shadow-hover: 0 12px 24px -4px rgba(79, 70, 229, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.02), 0 0 0 1px rgba(79, 70, 229, 0.15);
+        }
+
+        body.app-body {
+            font-family: var(--font-sans);
+            background-color: var(--slate-50);
+            color: var(--slate-800);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            letter-spacing: -0.01em;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .demo-ribbon {
+            background: linear-gradient(90deg, #4f46e5, #7c3aed);
+            color: #ffffff;
+            font-size: 0.8rem;
+            padding: 0.35rem 1rem;
+            text-align: center;
+            font-weight: 500;
+        }
+        .demo-ribbon a {
+            color: #ffffff;
+            font-weight: 700;
+            text-decoration: underline;
+        }
+
+        .app-header {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--slate-200);
+            z-index: 1030;
+        }
+
+        .brand-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: #ffffff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
+        }
+
+        .brand-text {
+            font-size: 1.2rem;
+            letter-spacing: -0.02em;
+        }
+
+        .fw-extrabold {
+            font-weight: 800;
+        }
+
+        .header-cta-btn {
+            background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+            border: none;
+            font-weight: 600;
+            color: #ffffff;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .header-cta-btn:hover {
+            background: linear-gradient(135deg, #4338ca 0%, #4f46e5 100%);
+            color: #ffffff;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 14px rgba(79, 70, 229, 0.3) !important;
+        }
+
+        .app-main-content {
+            flex: 1 0 auto;
+        }
+
+        .stat-widget {
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 1.25rem 1.5rem;
+            border: 1px solid var(--slate-200);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .stat-widget:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.35rem;
+        }
+
+        .stat-icon-indigo { background: var(--primary-light); color: var(--primary); }
+        .stat-icon-emerald { background: var(--success-light); color: var(--success); }
+        .stat-icon-sky { background: var(--info-light); color: var(--info); }
+
+        .modern-table-container {
+            background: #ffffff;
+            border-radius: 16px;
+            border: 1px solid var(--slate-200);
+            box-shadow: var(--shadow-card);
+            overflow: hidden;
+        }
+
+        .table.modern-table {
+            margin-bottom: 0;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .modern-table thead th {
+            background-color: var(--slate-50);
+            color: var(--slate-500);
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--slate-200);
+            border-top: none;
+        }
+
+        .modern-table tbody td {
+            padding: 1.1rem 1.25rem;
+            vertical-align: middle;
+            border-bottom: 1px solid var(--slate-100);
+            color: var(--slate-700);
+            font-size: 0.92rem;
+            transition: background-color 0.15s ease;
+        }
+
+        .modern-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .modern-table tbody tr:hover td {
+            background-color: #fbfcfe;
+        }
+
+        .avatar-badge {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.88rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-transform: uppercase;
+            flex-shrink: 0;
+        }
+
+        .avatar-color-0 { background: #e0e7ff; color: #4338ca; }
+        .avatar-color-1 { background: #dcfce7; color: #15803d; }
+        .avatar-color-2 { background: #e0f2fe; color: #0369a1; }
+        .avatar-color-3 { background: #fae8ff; color: #86198f; }
+
+        .badge-course {
+            font-size: 0.78rem;
+            font-weight: 600;
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .badge-ce { background-color: #eef2ff; color: #4338ca; border: 1px solid #c7d2fe; }
+        .badge-it { background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
+        .badge-ds { background-color: #f5f3ff; color: #6d28d9; border: 1px solid #ddd6fe; }
+        .badge-default { background-color: var(--slate-100); color: var(--slate-700); border: 1px solid var(--slate-200); }
+
+        .semester-pill {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--slate-600);
+            background-color: var(--slate-100);
+            padding: 0.25rem 0.65rem;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .btn-action-view {
+            color: var(--primary);
+            background-color: var(--primary-light);
+            border: 1px solid transparent;
+            font-weight: 600;
+            font-size: 0.82rem;
+            padding: 0.4rem 0.85rem;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            cursor: pointer;
+        }
+
+        .btn-action-view:hover {
+            background-color: var(--primary);
+            color: #ffffff;
+            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.25);
+        }
+
+        .btn-action-delete {
+            color: #dc2626;
+            background-color: #fee2e2;
+            border: 1px solid transparent;
+            font-weight: 600;
+            font-size: 0.82rem;
+            padding: 0.4rem 0.7rem;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .btn-action-delete:hover {
+            background-color: #dc2626;
+            color: #ffffff;
+        }
+
+        .form-label-modern {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--slate-700);
+            margin-bottom: 0.4rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .input-icon-group {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-icon-group .input-icon {
+            position: absolute;
+            left: 1rem;
+            color: var(--slate-400);
+            font-size: 1.05rem;
+            pointer-events: none;
+        }
+
+        .input-icon-group .form-control,
+        .input-icon-group .form-select {
+            padding-left: 2.75rem;
+            height: 48px;
+            border-radius: 10px;
+            border: 1px solid var(--slate-200);
+            font-size: 0.95rem;
+            color: var(--slate-800);
+            background-color: #ffffff;
+        }
+
+        .input-icon-group .form-control:focus,
+        .input-icon-group .form-select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px var(--primary-glow);
+            outline: none;
+        }
+
+        .profile-card {
+            background: #ffffff;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .profile-card-header {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            padding: 2.5rem 2rem 2rem 2rem;
+            text-align: center;
+            color: #ffffff;
+        }
+
+        .profile-avatar-large {
+            width: 84px;
+            height: 84px;
+            border-radius: 50%;
+            background: #ffffff;
+            color: var(--primary);
+            font-size: 2.2rem;
+            font-weight: 800;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            margin-bottom: 0.75rem;
+            border: 3px solid rgba(255, 255, 255, 0.85);
+        }
+
+        .profile-detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--slate-100);
+        }
+
+        .profile-detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--slate-500);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .detail-value {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--slate-800);
+        }
+
+        .search-input-wrap {
+            position: relative;
+            max-width: 320px;
+        }
+
+        .search-input-wrap .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--slate-400);
+        }
+
+        .search-input-wrap input {
+            padding-left: 2.5rem;
+            border-radius: 10px;
+            border: 1px solid var(--slate-200);
+            font-size: 0.88rem;
+            height: 40px;
+        }
+
+        .search-input-wrap input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-glow);
+        }
+
+        .empty-state {
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .empty-state-icon {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: var(--slate-100);
+            color: var(--slate-400);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .app-footer {
+            background-color: #ffffff;
+            border-top: 1px solid var(--slate-200);
+        }
+    </style>
+</head>
+<body class="app-body">
+    <!-- Top GitHub Pages Info Bar -->
+    <div class="demo-ribbon">
+        <i class="bi bi-github me-1"></i> StudentHub Live Preview on GitHub Pages • ASP.NET Core Project | 
+        <a href="https://github.com/mrsushantranjan/StudentRegistration" target="_blank" rel="noopener">View Source on GitHub</a>
+    </div>
+
+    <!-- Header Navigation -->
+    <header class="app-header sticky-top">
+        <nav class="navbar navbar-expand-lg py-3">
+            <div class="container">
+                <a class="navbar-brand d-flex align-items-center gap-2" href="#">
+                    <span class="brand-icon">
+                        <i class="bi bi-mortarboard-fill"></i>
+                    </span>
+                    <span class="brand-text">
+                        <span class="fw-bold text-dark">Student</span><span class="text-primary fw-extrabold">Hub</span>
+                    </span>
+                </a>
+
+                <div class="d-flex align-items-center gap-2 ms-auto">
+                    <button class="btn btn-primary btn-sm px-3 py-2 rounded-pill shadow-sm d-flex align-items-center gap-2 header-cta-btn" onclick="openRegisterModal()">
+                        <i class="bi bi-person-plus-fill"></i>
+                        <span>Register Student</span>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main role="main" class="container py-4 my-2 app-main-content">
+        <!-- Stat Widgets -->
+        <div class="row g-3 mb-4">
+            <!-- Stat 1: Total Students -->
+            <div class="col-md-4">
+                <div class="stat-widget">
+                    <div class="stat-icon stat-icon-indigo">
+                        <i class="bi bi-people-fill"></i>
+                    </div>
+                    <div>
+                        <div class="text-muted small fw-medium">Total Registered</div>
+                        <div class="fs-4 fw-bold text-dark" id="statTotalStudents">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stat 2: Active Programs -->
+            <div class="col-md-4">
+                <div class="stat-widget">
+                    <div class="stat-icon stat-icon-sky">
+                        <i class="bi bi-book-half"></i>
+                    </div>
+                    <div>
+                        <div class="text-muted small fw-medium">Active Programs</div>
+                        <div class="fs-4 fw-bold text-dark" id="statActivePrograms">3 Specializations</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stat 3: Quick Action -->
+            <div class="col-md-4">
+                <div class="stat-widget justify-content-between">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="stat-icon stat-icon-emerald">
+                            <i class="bi bi-person-check-fill"></i>
+                        </div>
+                        <div>
+                            <div class="text-muted small fw-medium">Admissions</div>
+                            <div class="fs-6 fw-bold text-success">Open & Active</div>
+                        </div>
+                    </div>
+                    <button onclick="openRegisterModal()" class="btn btn-outline-primary btn-sm rounded-pill px-3">
+                        <i class="bi bi-plus-lg"></i> Add
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Header & Search Toolbar -->
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-3">
+            <div>
+                <h4 class="fw-bold mb-1 text-dark">Student Directory</h4>
+                <p class="text-muted small mb-0">Manage registered students, academic records, and semester details.</p>
+            </div>
+
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+                <div class="search-input-wrap">
+                    <i class="bi bi-search search-icon"></i>
+                    <input type="text" id="studentSearchInput" class="form-control" placeholder="Search by name or email..." oninput="handleSearch()" />
+                </div>
+                <button onclick="openRegisterModal()" class="btn btn-primary d-inline-flex align-items-center gap-2 rounded-pill px-3 py-2 shadow-sm text-nowrap">
+                    <i class="bi bi-plus-circle-fill"></i>
+                    <span>Register Student</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Table Container -->
+        <div class="modern-table-container">
+            <div class="table-responsive">
+                <table class="table modern-table" id="studentsTable">
+                    <thead>
+                        <tr>
+                            <th style="width: 70px;">ID</th>
+                            <th>Student</th>
+                            <th>Program / Course</th>
+                            <th>Semester</th>
+                            <th class="text-end" style="width: 170px;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentTableBody">
+                        <!-- Populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="emptyState" class="empty-state d-none">
+                <div class="empty-state-icon">
+                    <i class="bi bi-folder2-open"></i>
+                </div>
+                <h5 class="fw-bold text-dark">No students found</h5>
+                <p class="text-muted small max-w-sm mx-auto mb-3">
+                    Add a new student or adjust your search filter.
+                </p>
+                <button onclick="openRegisterModal()" class="btn btn-primary rounded-pill px-4 py-2">
+                    <i class="bi bi-person-plus-fill me-1"></i> Register New Student
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Register Student Modal -->
+    <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg rounded-4 p-3">
+                <div class="d-flex align-items-center justify-content-between pb-3 border-bottom mb-3">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="stat-icon stat-icon-indigo">
+                            <i class="bi bi-person-plus-fill"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold mb-0 text-dark" id="registerModalLabel">Register New Student</h5>
+                            <span class="text-muted small">Enter student academic and contact information</span>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <form id="registerStudentForm" onsubmit="handleRegisterStudent(event)">
+                    <div id="formAlert" class="alert alert-danger py-2 small mb-3 d-none" role="alert"></div>
+
+                    <!-- Full Name -->
+                    <div class="mb-3">
+                        <label class="form-label-modern" for="studentNameInput">
+                            <i class="bi bi-person text-primary"></i> Full Name
+                        </label>
+                        <div class="input-icon-group">
+                            <input type="text" class="form-control" placeholder="e.g. John Doe" id="studentNameInput" required />
+                            <i class="bi bi-person input-icon"></i>
+                        </div>
+                    </div>
+
+                    <!-- Email Address -->
+                    <div class="mb-3">
+                        <label class="form-label-modern" for="studentEmailInput">
+                            <i class="bi bi-envelope text-primary"></i> Email Address
+                        </label>
+                        <div class="input-icon-group">
+                            <input type="email" class="form-control" placeholder="name@university.edu" id="studentEmailInput" required />
+                            <i class="bi bi-envelope input-icon"></i>
+                        </div>
+                    </div>
+
+                    <!-- Course / Specialization -->
+                    <div class="mb-3">
+                        <label class="form-label-modern" for="studentCourseSelect">
+                            <i class="bi bi-mortarboard text-primary"></i> Academic Program
+                        </label>
+                        <div class="input-icon-group">
+                            <select class="form-select" id="studentCourseSelect" required>
+                                <option value="">Select a program...</option>
+                                <option value="Computer Engineering">Computer Engineering</option>
+                                <option value="Information Technology">Information Technology</option>
+                                <option value="Data Science">Data Science</option>
+                            </select>
+                            <i class="bi bi-mortarboard input-icon"></i>
+                        </div>
+                    </div>
+
+                    <!-- Semester -->
+                    <div class="mb-4">
+                        <label class="form-label-modern" for="studentSemesterInput">
+                            <i class="bi bi-calendar3 text-primary"></i> Current Semester (1 - 8)
+                        </label>
+                        <div class="input-icon-group">
+                            <input type="number" min="1" max="8" class="form-control" placeholder="e.g. 5" id="studentSemesterInput" required />
+                            <i class="bi bi-calendar3 input-icon"></i>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="d-flex align-items-center justify-content-between pt-2">
+                        <button type="button" class="btn btn-light border px-4 py-2 rounded-pill text-muted fw-medium" data-bs-dismiss="modal">
+                            <i class="bi bi-arrow-left"></i> Cancel
+                        </button>
+
+                        <button type="submit" class="btn btn-primary px-4 py-2 rounded-pill fw-semibold shadow-sm d-inline-flex align-items-center gap-2">
+                            <i class="bi bi-check2-circle"></i>
+                            <span>Register Student</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Student Details Modal -->
+    <div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden p-0">
+                <div class="profile-card">
+                    <!-- Gradient Header Banner -->
+                    <div class="profile-card-header position-relative">
+                        <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <div class="profile-avatar-large" id="detailAvatar">
+                            JD
+                        </div>
+                        <h4 class="fw-bold mb-1 text-white" id="detailName">John Doe</h4>
+                        <div class="d-inline-flex align-items-center gap-1 mt-1">
+                            <span class="badge bg-white text-dark shadow-sm px-3 py-1 rounded-pill small fw-semibold" id="detailHeaderBadge">
+                                <i class="bi bi-mortarboard me-1 text-primary"></i> Computer Engineering
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Details List -->
+                    <div class="p-3">
+                        <div class="profile-detail-row">
+                            <span class="detail-label">
+                                <i class="bi bi-hash text-muted"></i> Student ID
+                            </span>
+                            <span class="detail-value text-primary" id="detailId">
+                                #1
+                            </span>
+                        </div>
+
+                        <div class="profile-detail-row">
+                            <span class="detail-label">
+                                <i class="bi bi-person text-muted"></i> Full Name
+                            </span>
+                            <span class="detail-value" id="detailFullName">
+                                John Doe
+                            </span>
+                        </div>
+
+                        <div class="profile-detail-row">
+                            <span class="detail-label">
+                                <i class="bi bi-envelope text-muted"></i> Email Address
+                            </span>
+                            <span class="detail-value">
+                                <a href="#" id="detailEmailLink" class="text-decoration-none text-dark hover-underline">
+                                    john@example.com
+                                </a>
+                            </span>
+                        </div>
+
+                        <div class="profile-detail-row">
+                            <span class="detail-label">
+                                <i class="bi bi-mortarboard text-muted"></i> Academic Program
+                            </span>
+                            <span class="badge-course badge-ce" id="detailCourseBadge">
+                                <i class="bi bi-cpu"></i>
+                                <span id="detailCourseName">Computer Engineering</span>
+                            </span>
+                        </div>
+
+                        <div class="profile-detail-row">
+                            <span class="detail-label">
+                                <i class="bi bi-calendar3 text-muted"></i> Current Semester
+                            </span>
+                            <span class="semester-pill" id="detailSemesterPill">
+                                Semester 5 of 8
+                            </span>
+                        </div>
+
+                        <div class="profile-detail-row">
+                            <span class="detail-label">
+                                <i class="bi bi-patch-check text-muted"></i> Status
+                            </span>
+                            <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-1 rounded-pill small fw-semibold">
+                                <i class="bi bi-check-circle-fill me-1"></i> Active Student
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="p-3 bg-light d-flex justify-content-end">
+                        <button type="button" class="btn btn-secondary btn-sm px-4 rounded-pill" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="app-footer py-4 mt-auto">
+        <div class="container d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2">
+            <div class="text-muted small">
+                <span>&copy; <span id="currentYear"></span> StudentHub • Academic Management System</span>
+            </div>
+            <div class="d-flex align-items-center gap-3 small text-muted">
+                <button onclick="resetData()" class="btn btn-link btn-sm text-muted text-decoration-none p-0">
+                    <i class="bi bi-arrow-counterclockwise"></i> Reset Sample Data
+                </button>
+                <span class="badge bg-light text-secondary border px-2 py-1"><i class="bi bi-code-slash me-1"></i> ASP.NET Core MVC</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        const INITIAL_STUDENTS = [
+            { id: 1, name: "Aarav Sharma", email: "aarav.sharma@example.com", course: "Computer Engineering", semester: 5 },
+            { id: 2, name: "Priya Patel", email: "priya.patel@example.com", course: "Data Science", semester: 3 },
+            { id: 3, name: "Rohan Verma", email: "rohan.v@example.com", course: "Information Technology", semester: 6 }
+        ];
+
+        const STORAGE_KEY = "studenthub_students_list";
+
+        function getStudents() {
+            const data = localStorage.getItem(STORAGE_KEY);
+            if (!data) {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(INITIAL_STUDENTS));
+                return INITIAL_STUDENTS;
+            }
+            try {
+                return JSON.parse(data);
+            } catch (e) {
+                return INITIAL_STUDENTS;
+            }
+        }
+
+        function saveStudents(students) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(students));
+            renderTable();
+        }
+
+        function getInitials(name) {
+            return name
+                .split(' ')
+                .filter(Boolean)
+                .slice(0, 2)
+                .map(part => part[0])
+                .join('')
+                .toUpperCase();
+        }
+
+        function getCourseMeta(course) {
+            switch (course) {
+                case "Computer Engineering":
+                    return { badgeClass: "badge-ce", icon: "bi-cpu" };
+                case "Information Technology":
+                    return { badgeClass: "badge-it", icon: "bi-globe" };
+                case "Data Science":
+                    return { badgeClass: "badge-ds", icon: "bi-pie-chart" };
+                default:
+                    return { badgeClass: "badge-default", icon: "bi-mortarboard" };
+            }
+        }
+
+        function updateStats(students) {
+            document.getElementById("statTotalStudents").textContent = students.length;
+            const uniqueCourses = new Set(students.map(s => s.course)).size;
+            document.getElementById("statActivePrograms").textContent = `${uniqueCourses} Specializations`;
+        }
+
+        function renderTable(filterTerm = "") {
+            const allStudents = getStudents();
+            updateStats(allStudents);
+
+            const term = filterTerm.toLowerCase().trim();
+            const students = allStudents.filter(s => 
+                s.name.toLowerCase().includes(term) || s.email.toLowerCase().includes(term) || s.course.toLowerCase().includes(term)
+            );
+
+            const tbody = document.getElementById("studentTableBody");
+            const emptyState = document.getElementById("emptyState");
+            const tableElement = document.getElementById("studentsTable");
+
+            if (students.length === 0) {
+                tbody.innerHTML = "";
+                tableElement.classList.add("d-none");
+                emptyState.classList.remove("d-none");
+                return;
+            }
+
+            tableElement.classList.remove("d-none");
+            emptyState.classList.add("d-none");
+
+            let html = "";
+            students.forEach((student, index) => {
+                const initials = getInitials(student.name);
+                const avatarColor = `avatar-color-${index % 4}`;
+                const meta = getCourseMeta(student.course);
+
+                html += `
+                    <tr class="student-row">
+                        <td class="text-muted fw-semibold">#${student.id}</td>
+                        <td>
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="avatar-badge ${avatarColor}">
+                                    ${initials}
+                                </div>
+                                <div>
+                                    <div class="fw-bold text-dark student-name">${escapeHtml(student.name)}</div>
+                                    <div class="text-muted small student-email">${escapeHtml(student.email)}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge-course ${meta.badgeClass}">
+                                <i class="bi ${meta.icon}"></i>
+                                <span>${escapeHtml(student.course)}</span>
+                            </span>
+                        </td>
+                        <td>
+                            <span class="semester-pill">
+                                <i class="bi bi-calendar3 me-1 text-muted"></i>
+                                Sem ${student.semester}
+                            </span>
+                        </td>
+                        <td class="text-end">
+                            <div class="d-inline-flex gap-1">
+                                <button class="btn-action-view" onclick="viewDetails(${student.id})">
+                                    <span>Details</span>
+                                    <i class="bi bi-arrow-right-short fs-6"></i>
+                                </button>
+                                <button class="btn-action-delete" title="Delete" onclick="deleteStudent(${student.id})">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            tbody.innerHTML = html;
+        }
+
+        function escapeHtml(str) {
+            if (!str) return "";
+            return String(str)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function handleSearch() {
+            const term = document.getElementById("studentSearchInput").value;
+            renderTable(term);
+        }
+
+        let registerModalInstance = null;
+        let detailsModalInstance = null;
+
+        function openRegisterModal() {
+            document.getElementById("registerStudentForm").reset();
+            document.getElementById("formAlert").classList.add("d-none");
+            if (!registerModalInstance) {
+                registerModalInstance = new bootstrap.Modal(document.getElementById('registerModal'));
+            }
+            registerModalInstance.show();
+        }
+
+        function handleRegisterStudent(e) {
+            e.preventDefault();
+            const name = document.getElementById("studentNameInput").value.trim();
+            const email = document.getElementById("studentEmailInput").value.trim();
+            const course = document.getElementById("studentCourseSelect").value;
+            const semester = parseInt(document.getElementById("studentSemesterInput").value, 10);
+            const alertBox = document.getElementById("formAlert");
+
+            if (!name || !email || !course || isNaN(semester)) {
+                alertBox.textContent = "Please fill in all required fields.";
+                alertBox.classList.remove("d-none");
+                return;
+            }
+
+            if (semester < 1 || semester > 8) {
+                alertBox.textContent = "Semester must be between 1 and 8.";
+                alertBox.classList.remove("d-none");
+                return;
+            }
+
+            const students = getStudents();
+            const nextId = students.length > 0 ? Math.max(...students.map(s => s.id)) + 1 : 1;
+
+            const newStudent = {
+                id: nextId,
+                name: name,
+                email: email,
+                course: course,
+                semester: semester
+            };
+
+            students.push(newStudent);
+            saveStudents(students);
+
+            if (registerModalInstance) {
+                registerModalInstance.hide();
+            }
+        }
+
+        function viewDetails(id) {
+            const students = getStudents();
+            const student = students.find(s => s.id === id);
+            if (!student) return;
+
+            const initials = getInitials(student.name);
+            const meta = getCourseMeta(student.course);
+
+            document.getElementById("detailAvatar").textContent = initials;
+            document.getElementById("detailName").textContent = student.name;
+            document.getElementById("detailFullName").textContent = student.name;
+            document.getElementById("detailId").textContent = `#${student.id}`;
+            
+            const emailLink = document.getElementById("detailEmailLink");
+            emailLink.textContent = student.email;
+            emailLink.href = `mailto:${student.email}`;
+
+            document.getElementById("detailHeaderBadge").innerHTML = `
+                <i class="bi ${meta.icon} me-1 text-primary"></i> ${escapeHtml(student.course)}
+            `;
+
+            const badge = document.getElementById("detailCourseBadge");
+            badge.className = `badge-course ${meta.badgeClass}`;
+            badge.innerHTML = `<i class="bi ${meta.icon}"></i> <span>${escapeHtml(student.course)}</span>`;
+
+            document.getElementById("detailSemesterPill").textContent = `Semester ${student.semester} of 8`;
+
+            if (!detailsModalInstance) {
+                detailsModalInstance = new bootstrap.Modal(document.getElementById('detailsModal'));
+            }
+            detailsModalInstance.show();
+        }
+
+        function deleteStudent(id) {
+            if (confirm("Are you sure you want to remove this student?")) {
+                let students = getStudents();
+                students = students.filter(s => s.id !== id);
+                saveStudents(students);
+            }
+        }
+
+        function resetData() {
+            if (confirm("Reset student list to default sample records?")) {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(INITIAL_STUDENTS));
+                renderTable();
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            document.getElementById("currentYear").textContent = new Date().getFullYear();
+            renderTable();
+        });
+    </script>
+</body>
+</html>
